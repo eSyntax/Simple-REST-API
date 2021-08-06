@@ -20,6 +20,7 @@ namespace Simple_API.Models
         [StringLength(25, MinimumLength = 4, ErrorMessage = "* Password must be between 4 and 25 character in length.")]
         public string Password { get; set; }
 
+        //Admin = 0, User = 1
         public UserPrivileges Privileges { get; set; }
     }
 }
