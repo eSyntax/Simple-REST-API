@@ -1,0 +1,86 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using Simple_API.Models;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Simple_API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class TokenController : ControllerBase
+    {
+        //Using to access appsettings variables
+        private IConfiguration _configuration;
+
+        //Using to access database
+        private readonly AppDBContext _context;
+
+        public TokenController(IConfiguration configuration, AppDBContext context)
+        {
+            _configuration = configuration;
+            _context = context;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post(UserInfo userInfo)
+        {
+
+            if (userInfo != null && userInfo.UserName != null && userInfo.Password != null)
+            {
+                //Getting user from database
+                var user = await GetUser(userInfo.UserName, userInfo.Password);
+
+                if(user != null)
+                {
+                    var claims = new[]
+                    {
+                        new Claim(JwtRegisteredClaimNames.Sub,_configuration["Jwt:Subject"]), //{sub: (subject key from appsettings)}
+                        new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),     //{jti: (unique identifier)}
+                        new Claim(JwtRegisteredClaimNames.Iat,DateTime.UtcNow.ToString()),    //{iat: 8/6/2021 1:43:31 PM}
+                        new Claim("Id", user.UserId.ToString()),
+                        new Claim("UserName", user.UserName),
+                        new Claim("Password", user.Password),
+                    };
+
+                    //Converting key from appsettings to array of bytes
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+
+                    //Encoding with HmacSha256
+                    var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                    var token = new JwtSecurityToken(
+                        _configuration["Jwt:Issuer"],
+                        _configuration["Jwt:Audience"],
+                        claims,
+                        expires: DateTime.Now.AddMinutes(20),
+                        signingCredentials: signIn
+                    );
+
+                    return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+
+                } else {
+
+                    return BadRequest("Invalid credentials");
+
+                }
+
+            } else {
+
+                return BadRequest();
+
+            }
+        }
+
+        [HttpGet]
+        public async Task<UserInfo> GetUser(string userName, string password)
+        {
+            return await _context.UserInfo.FirstOrDefaultAsync(u => u.UserName == userName && u.Password == password);
+        }
+    }
+}
