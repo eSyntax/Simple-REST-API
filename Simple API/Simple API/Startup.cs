@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Simple_API.Helpers;
 using Simple_API.Models;
 using System.Text;
 
@@ -30,6 +31,7 @@ namespace Simple_API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API V1", Version = "v1" });
+
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "Jwt Authorization",
@@ -38,6 +40,7 @@ namespace Simple_API
                     Type = SecuritySchemeType.ApiKey,
                     Scheme = "Bearer"
                 });
+
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
@@ -52,6 +55,8 @@ namespace Simple_API
                         new string[] { }
                     }
                 });
+
+                c.SchemaFilter<EnumSchemaFilter>();
             });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -70,9 +75,15 @@ namespace Simple_API
 
             services.AddMvc();
 
-            services.AddControllers().AddJsonOptions(options => {
-                options.JsonSerializerOptions.PropertyNamingPolicy = null;
-            });
+            // Models serialization and display
+            //object p = services.AddControllers().AddNewtonsoftJson(o =>
+            //{
+            //    // Used for convert Enum values to attribute values
+            //    o.SerializerSettings.Converters = new List<JsonConverter> { new StringEnumConverter {} };
+            //    o.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            //    o.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            //    o.SerializerSettings.Formatting = Formatting.Indented;
+            //});
 
             services.AddDbContext<AppDBContext>(option => option.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
         }

@@ -1,6 +1,7 @@
 ﻿using Simple_API.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Simple_API.Models
 {
@@ -17,5 +18,7 @@ namespace Simple_API.Models
 
         //NotCompleted = 0, Completed = 1
         public TaskStatus TaskCompleted { get; set; }
+
+        public UserInfo UserInfo { get; set; }
     }
 }

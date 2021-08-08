@@ -31,10 +31,10 @@ namespace Simple_API.Controllers
         public async Task<IActionResult> Post(UserInfo userInfo)
         {
 
-            if (userInfo != null && userInfo.UserName != null && userInfo.Password != null)
+            if (userInfo != null && userInfo.Email != null && userInfo.Password != null)
             {
                 //Getting user from database
-                var user = await GetUser(userInfo.UserName, userInfo.Password);
+                var user = await GetUser(userInfo.Email, userInfo.Password);
 
                 if(user != null)
                 {
@@ -44,7 +44,7 @@ namespace Simple_API.Controllers
                         new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),     //{jti: (unique identifier)}
                         new Claim(JwtRegisteredClaimNames.Iat,DateTime.UtcNow.ToString()),    //{iat: 8/6/2021 1:43:31 PM}
                         new Claim("Id", user.UserId.ToString()),
-                        new Claim("UserName", user.UserName),
+                        new Claim("Email", user.Email),
                         new Claim("Password", user.Password),
                     };
 
@@ -78,9 +78,9 @@ namespace Simple_API.Controllers
         }
 
         [HttpGet]
-        public async Task<UserInfo> GetUser(string userName, string password)
+        public async Task<UserInfo> GetUser(string email, string password)
         {
-            return await _context.UserInfo.FirstOrDefaultAsync(u => u.UserName == userName && u.Password == password);
+            return await _context.UserInfo.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
         }
     }
 }

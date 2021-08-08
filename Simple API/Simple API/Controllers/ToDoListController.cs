@@ -34,7 +34,7 @@ namespace Simple_API.Controllers
         public async Task<ActionResult<ToDoList>> GetToDoList(int id)
         {
             var toDoList = await _context.ToDoList.FindAsync(id);
-
+    
             if (toDoList == null)
             {
                 return NotFound();
@@ -81,6 +81,9 @@ namespace Simple_API.Controllers
         [HttpPost]
         public async Task<ActionResult<ToDoList>> PostToDoList(ToDoList toDoList)
         {
+            //Fill user data when creating new ToDo List
+            toDoList.UserInfo = _context.UserInfo.SingleOrDefault();
+
             _context.ToDoList.Add(toDoList);
             await _context.SaveChangesAsync();
 
