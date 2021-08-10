@@ -1,11 +1,11 @@
 # Simple-REST-API
 
 
-1) Vartotojų rolės ir užduočių sąrašo statusai padaryti per enum'ą (siekiant sutaupyti sql'o vietą ir sumažinti užklausų kiekį)
-2) Projekte yra naudojamas Newtonsoft, siekiant sukurti JsonIgnore conditional
-3) Sukurtos 3 migracijos ir 14 commit'ų
-4) Projekte nėra tikrinama, ar insertinami/updatinami FK ir enumai egzistuoja
-5) Nėra slaptažodžio keitimo funkcijos
+- Vartotojų rolės ir užduočių sąrašo statusai padaryti per enum'ą (siekiant sutaupyti sql'o vietą ir sumažinti užklausų kiekį)
+- Projekte yra naudojamas Newtonsoft, siekiant sukurti JsonIgnore conditional
+- Sukurtos 3 migracijos ir 14 commit'ų
+- Projekte nėra tikrinama, ar insertinami/updatinami FK ir enumai egzistuoja
+- Nėra slaptažodžio keitimo funkcijos
 
 
 Kita informacija:
