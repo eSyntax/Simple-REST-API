@@ -7,8 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Simple_API.Enums;
 using Simple_API.Helpers;
 using Simple_API.Models;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Simple_API
@@ -122,6 +124,85 @@ namespace Simple_API
             {
                 endpoints.MapControllers();
             });
+
+            InitializingDbData(app);
+        }
+
+        //Resetting tables data on every startup
+        private static void InitializingDbData(IApplicationBuilder app)
+        {
+            var scope = app.ApplicationServices.CreateScope();
+            var context = scope.ServiceProvider.GetService<AppDBContext>();
+
+            context.Database.ExecuteSqlRaw("TRUNCATE TABLE todolist;");
+            //Cannot TRUNCATE this table because of foreign key restriction
+            context.Database.ExecuteSqlRaw("DELETE FROM userinfo;");
+
+            var users = new List<UserInfo>()
+            {
+                new UserInfo { 
+                    Email = "admin@admin.com",
+                    Password = "test123456789",
+                    Privileges = UserPrivileges.Admin
+                },
+                new UserInfo {
+                    Email = "user@user.com",
+                    Password = "test123456789",
+                    Privileges = UserPrivileges.User
+                },
+                new UserInfo {
+                    Email = "user2@user2.com",
+                    Password = "test123456789",
+                    Privileges = UserPrivileges.User
+                }
+            };
+
+            context.UserInfo.AddRange(users);
+            context.SaveChanges();
+
+            var todoList = new List<ToDoList>()
+            {
+                new ToDoList
+                {
+                    Description = "admin not completed",
+                    TaskCompleted = TaskStatus.NotCompleted,
+                    UserId = users[0].UserId
+                },
+                new ToDoList
+                {
+                    Description = "admin completed task",
+                    TaskCompleted = TaskStatus.Completed,
+                    UserId = users[0].UserId
+                },
+                new ToDoList
+                {
+                    Description = "user not compl",
+                    TaskCompleted = TaskStatus.NotCompleted,
+                    UserId = users[1].UserId
+                },
+                new ToDoList
+                {
+                    Description = "user2 compl",
+                    TaskCompleted = TaskStatus.Completed,
+                    UserId = users[2].UserId
+                },
+                new ToDoList
+                {
+                    Description = "user2 not compl",
+                    TaskCompleted = TaskStatus.Completed,
+                    UserId = users[2].UserId
+                },
+                new ToDoList
+                {
+                    Description = "user2 test",
+                    TaskCompleted = TaskStatus.Completed,
+                    UserId = users[2].UserId
+                },
+            };
+
+            context.ToDoList.AddRange(todoList);
+            context.SaveChanges();
+
         }
     }
 }
