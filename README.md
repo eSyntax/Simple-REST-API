@@ -15,7 +15,7 @@ Kita informacija:
 
 ToDoList GET užklausa su skirtingom rolėm:
 
-![alt text](https://github.com/eSyntax/Simple-REST-API/blob/06d0c7ee6f60edaf36c7c745a9fbdc31638380df/images/user1.PNG?raw=true)
+![alt text](https://github.com/eSyntax/Simple-REST-API/blob/f66b5151f342dc6a9c07a3bcf2cf81cda298ad24/images/user1.PNG?raw=true)
 
 ToDoList PUT/POST užklausa:
 
