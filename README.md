@@ -6,6 +6,7 @@
 - Sukurtos 3 migracijos ir 14 commit'ų
 - Projekte nėra tikrinama, ar insertinami/updatinami FK ir enumai egzistuoja
 - Nėra slaptažodžio keitimo funkcijos
+- Projektas padarytas pagal visus nefunkcinius reikalavimus
 
 
 Kita informacija:
