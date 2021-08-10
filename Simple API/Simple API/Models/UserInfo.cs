@@ -1,5 +1,4 @@
 ﻿using Simple_API.Enums;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -7,7 +6,8 @@ using System.Text.Json.Serialization;
 namespace Simple_API.Models
 {
     public class UserInfo
-    {
+    { 
+
         [Key]
         //EF will create an IDENTITY column in the SQL database for this property
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -24,10 +24,7 @@ namespace Simple_API.Models
         public string Password { get; set; }
 
         //Admin = 0, User = 1
-        public UserPrivileges Privileges { get; set; }
-
         [JsonIgnore]
-        public ICollection<ToDoList> UserToDoList { get; set; }
-
+        public UserPrivileges Privileges { get; set; }
     }
 }

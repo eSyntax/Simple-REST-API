@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Simple_API.Models;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace Simple_API.Controllers
     public class TokenController : ControllerBase
     {
         //Using to access appsettings variables
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
 
         //Using to access database
         private readonly AppDBContext _context;
@@ -38,14 +39,16 @@ namespace Simple_API.Controllers
 
                 if(user != null)
                 {
+                    //JWT uses Claim to pass data through token
                     var claims = new[]
                     {
                         new Claim(JwtRegisteredClaimNames.Sub,_configuration["Jwt:Subject"]), //{sub: (subject key from appsettings)}
                         new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),     //{jti: (unique identifier)}
                         new Claim(JwtRegisteredClaimNames.Iat,DateTime.UtcNow.ToString()),    //{iat: 8/6/2021 1:43:31 PM}
-                        new Claim("Id", user.UserId.ToString()),
+                        new Claim("UserId", user.UserId.ToString()),
                         new Claim("Email", user.Email),
                         new Claim("Password", user.Password),
+                        new Claim("Privileges", user.Privileges.ToString())
                     };
 
                     //Converting key from appsettings to array of bytes
@@ -61,6 +64,7 @@ namespace Simple_API.Controllers
                         expires: DateTime.Now.AddMinutes(20),
                         signingCredentials: signIn
                     );
+
 
                     return Ok(new JwtSecurityTokenHandler().WriteToken(token));
 
@@ -82,5 +86,6 @@ namespace Simple_API.Controllers
         {
             return await _context.UserInfo.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
         }
+
     }
 }

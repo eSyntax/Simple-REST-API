@@ -17,8 +17,39 @@ namespace Simple_API.Models
         public string Description { get; set; }
 
         //NotCompleted = 0, Completed = 1
+        [Required]
         public TaskStatus TaskCompleted { get; set; }
 
-        public UserInfo UserInfo { get; set; }
+        [Required]
+        [JsonIgnore]
+        public int UserId { get; set; }
+
+        //ToDoList user data from foreign key
+        [JsonIgnore]
+        [ForeignKey("UserId")]
+        public UserInfo UserDetails { get; set; }
+
+        //Logged user data from JWT
+        [NotMapped]
+        [JsonIgnore]
+        public UserInfo LoggedUserDetails { get; set; }
+
+        //Newtonsoft serialize variable only if logged user is admin
+        public bool ShouldSerializeUserDetails()
+        {
+            return LoggedUserDetails.Privileges == UserPrivileges.Admin;
+        }
+
+        //Newtonsoft serialize variable only if logged user is admin
+        public bool ShouldSerializeUserId()
+        {
+            return LoggedUserDetails.Privileges == UserPrivileges.Admin;
+        }
+
+        //Newtonsoft never serialize this object. [JsonIgnore] not working alone since newtonsoft is installed.
+        public bool ShouldSerializeLoggedUserDetails()
+        {
+            return false;
+        }
     }
 }
