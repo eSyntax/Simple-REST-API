@@ -19,3 +19,21 @@ ToDoList GET užklausa su skirtingom rolėm:
 ToDoList PUT/POST užklausa:
 
 ![alt text](https://github.com/eSyntax/Simple-REST-API/blob/06d0c7ee6f60edaf36c7c745a9fbdc31638380df/images/user2.PNG?raw=true)
+
+Dependencies:
+- EnumExtensions.System.Text.Json
+- Microsoft.AspNetCore.Authentication.JwtBearer
+- Microsoft.EntityFrameworkCore
+- Microsoft.EntityFrameworkCore.Relational
+- Microsoft.EntityFrameworkCore.SqlServer
+- Microsoft.EntityFrameworkCore.Tools
+- Microsoft.VisualStudio.Web.CodeGeneration.Design
+- MySql.Data
+- MySql.EntityFrameworkCore
+- MySqlConnector
+- Newtonsoft.Json
+- Swashbuckle.AspNetCore
+- Swashbuckle.AspNetCore.Newtonsoft
+- Swashbuckle.AspNetCore.SwaggerGen
+- Swashbuckle.Core
+- Unchase.Swashbuckle.AspNetCore.Extensions
