@@ -40,10 +40,10 @@ namespace Simple_API.Models
             return LoggedUserDetails.Privileges == UserPrivileges.Admin;
         }
 
-        //Newtonsoft serialize variable only if logged user is admin
+        //Newtonsoft never serialize this object. [JsonIgnore] not working alone since newtonsoft is installed.
         public bool ShouldSerializeUserId()
         {
-            return LoggedUserDetails.Privileges == UserPrivileges.Admin;
+            return false;
         }
 
         //Newtonsoft never serialize this object. [JsonIgnore] not working alone since newtonsoft is installed.
